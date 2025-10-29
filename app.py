@@ -659,4 +659,4 @@ def exibir_pagina_termo(df, termo_nome):
         # Termos relacionados
         st.markdown("**Termos Relacionados:**")
         for relacionado in termo_data['relacionados']:
-            if st.button(f"→ {rel
+            if st.button(f"→ {rel}

@@ -119,7 +119,7 @@ def carregar_dados():
             "relacionados": ["Pessoa Jurídica", "Responsabilidade", "Sociedade"]
         },
         {
-            "termo": "Direito Acquirito",
+            "termo": "Direito Adquirido",
             "definicao": "Direito que não pode ser contestado, por ter sido adquirido de forma legítima e em conformidade com a lei.",
             "area": "Direito Civil",
             "fonte": "Câmara dos Deputados",

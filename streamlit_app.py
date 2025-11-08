@@ -88,38 +88,6 @@ class APIGlossarioJuridico:
             'planalto': 'http://www.planalto.gov.br/ccivil_03/'
         }
     
-    def buscar_dados_api_stf(self, termo):
-        """Busca dados reais do STF (simulação de API real)"""
-        try:
-            stf_dados = self._get_stf_data()
-            return stf_dados.get(termo, {})
-        except:
-            return {}
-    
-    def buscar_dados_api_stj(self, termo):
-        """Busca dados reais do STJ (simulação de API real)"""
-        try:
-            stj_dados = self._get_stj_data()
-            return stj_dados.get(termo, {})
-        except:
-            return {}
-    
-    def buscar_dados_api_camara(self, termo):
-        """Busca dados reais da Câmara (simulação de API real)"""
-        try:
-            camara_dados = self._get_camara_data()
-            return camara_dados.get(termo, {})
-        except:
-            return {}
-    
-    def buscar_dados_api_planalto(self, termo):
-        """Busca dados reais do Planalto (simulação de API real)"""
-        try:
-            planalto_dados = self._get_planalto_data()
-            return planalto_dados.get(termo, {})
-        except:
-            return {}
-    
     def _get_stf_data(self):
         """Dados simulados da API do STF - termos jurisprudenciais atualizados"""
         return {
@@ -388,20 +356,20 @@ class APIGlossarioJuridico:
     
     def buscar_termo_unificado(self, termo):
         """Busca o termo em todas as APIs e retorna o melhor resultado"""
-        dados_stf = self.buscar_dados_api_stf(termo)
-        dados_stj = self.buscar_dados_api_stj(termo)
-        dados_camara = self.buscar_dados_api_camara(termo)
-        dados_planalto = self.buscar_dados_api_planalto(termo)
+        stf_dados = self._get_stf_data()
+        stj_dados = self._get_stj_data()
+        camara_dados = self._get_camara_data()
+        planalto_dados = self._get_planalto_data()
         
         # Prioridade: STF > STJ > Câmara > Planalto
-        if dados_stf:
-            return dados_stf
-        elif dados_stj:
-            return dados_stj
-        elif dados_camara:
-            return dados_camara
-        elif dados_planalto:
-            return dados_planalto
+        if termo in stf_dados:
+            return stf_dados[termo]
+        elif termo in stj_dados:
+            return stj_dados[termo]
+        elif termo in camara_dados:
+            return camara_dados[termo]
+        elif termo in planalto_dados:
+            return planalto_dados[termo]
         else:
             return {}
     
@@ -661,7 +629,6 @@ def exibir_explorar_termos(df, area_selecionada, termo_busca):
 
 def exibir_pagina_termo(df, termo_nome):
     termo_data = df[df['termo'] == termo_nome].iloc[0]
-    api = APIGlossarioJuridico()
     news = GoogleNewsIntegracao()
     
     st.markdown(f'<div class="definition-card">', unsafe_allow_html=True)

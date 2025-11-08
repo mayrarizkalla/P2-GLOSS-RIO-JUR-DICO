@@ -5,8 +5,6 @@ import plotly.graph_objects as go
 import requests
 import json
 from datetime import datetime
-import feedparser
-from bs4 import BeautifulSoup
 import time
 
 # Configuração da página
@@ -79,210 +77,207 @@ st.markdown("""
 # Inicialização do estado
 if 'termo_selecionado' not in st.session_state:
     st.session_state.termo_selecionado = None
-if 'aba_ativa' not in st.session_state:
-    st.session_state.aba_ativa = "Início"
 
 # Classe para APIs Jurídicas
 class APIGlossarioJuridico:
     def __init__(self):
-        self.base_urls = {
-            'stf': 'http://www.stf.jus.br/portal/',
-            'stj': 'https://scon.stj.jus.br/SCON/',
-            'camara': 'https://dicionario.camara.leg.br/',
-            'planalto': 'http://www.planalto.gov.br/ccivil_03/'
+        self.termos_completos = {
+            "Habeas Corpus": {
+                "definicao": "Remédio constitucional que visa proteger o direito de locomoção do indivíduo, conforme art. 5º, LXVIII da CF/88.",
+                "fonte": "STF - Supremo Tribunal Federal",
+                "jurisprudencia": "HC 184.246/SP - Concedido para trancamento de ação penal por ausência de justa causa.",
+                "area": "Direito Constitucional",
+                "exemplo": "O Habeas Corpus foi concedido para um preso que estava encarcerado sem mandado judicial válido."
+            },
+            "Mandado de Segurança": {
+                "definicao": "Ação constitucional para proteção de direito líquido e certo não amparado por HC ou HD.",
+                "fonte": "STF - Supremo Tribunal Federal", 
+                "jurisprudencia": "MS 34.567 - Concedido para assegurar direito a cargo público.",
+                "area": "Direito Constitucional",
+                "exemplo": "Concedido mandado de segurança para assegurar vaga em concurso público."
+            },
+            "Ação Rescisória": {
+                "definicao": "Meio processual para desconstituir sentença transitada em julgado por vícios legais.",
+                "fonte": "STF - Supremo Tribunal Federal",
+                "jurisprudencia": "AR 5.432/DF - Admitida rescisão por documento novo.",
+                "area": "Direito Processual Civil",
+                "exemplo": "A parte ajuizou ação rescisória para anular sentença proferida com base em documento falso."
+            },
+            "Usucapião": {
+                "definicao": "Modo aquisitivo da propriedade pela posse prolongada nos termos legais.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "REsp 987.654/RS - Reconhecida usucapião extraordinária urbana.",
+                "area": "Direito Civil",
+                "exemplo": "O proprietário adquiriu o imóvel por usucapião após 15 anos de posse mansa e pacífica."
+            },
+            "Princípio da Isonomia": {
+                "definicao": "Princípio constitucional da igualdade de todos perante a lei (art. 5º, caput, CF/88).",
+                "fonte": "Câmara dos Deputados",
+                "jurisprudencia": "Constituição Federal, Artigo 5º",
+                "area": "Direito Constitucional",
+                "exemplo": "O princípio da isonomia foi invocado para garantir tratamento igualitário a homens e mulheres em concurso público."
+            },
+            "Crime Culposo": {
+                "definicao": "Conduta voluntária com resultado ilícito não desejado por imprudência, negligência ou imperícia.",
+                "fonte": "Câmara dos Deputados", 
+                "jurisprudencia": "Código Penal, Artigo 18, II",
+                "area": "Direito Penal",
+                "exemplo": "O motorista foi condenado por crime culposo de homicídio após causar acidente por excesso de velocidade."
+            },
+            "Coisa Julgada": {
+                "definicao": "Qualidade da sentença que não mais admite recurso, tornando-se imutável.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "Disciplinada no art. 502 do CPC",
+                "area": "Direito Processual Civil",
+                "exemplo": "A sentença transitou em julgado após esgotados todos os recursos."
+            },
+            "Agravo de Instrumento": {
+                "definicao": "Recurso contra decisão interlocutória que causa lesão grave.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "AgInt no REsp 2.222.333 - Admitido para rediscutir prova.",
+                "area": "Direito Processual Civil",
+                "exemplo": "O agravo foi interposto contra decisão que indeferiu prova pericial."
+            },
+            "Desconsideração da Personalidade Jurídica": {
+                "definicao": "Instrumento para ultrapassar autonomia patrimonial da pessoa jurídica.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "REsp 1.111.222/SP - Aplicada para responsabilizar sócios.",
+                "area": "Direito Empresarial",
+                "exemplo": "A desconsideração foi aplicada para cobrar dívidas da empresa diretamente dos sócios."
+            },
+            "Jus Postulandi": {
+                "definicao": "Capacidade de postular em juízo perante o Poder Judiciário.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "Em regra, exercido por advogados (art. 1º da Lei 8.906/94)",
+                "area": "Direito Processual",
+                "exemplo": "A defensoria pública exerce o jus postulandi em favor dos necessitados."
+            },
+            "Recurso Extraordinário": {
+                "definicao": "Recurso cabível quando a decisão contraria a Constituição Federal.",
+                "fonte": "STF - Supremo Tribunal Federal",
+                "jurisprudencia": "RE 1.234.567 - Julgado procedente por ofensa à Constituição.",
+                "area": "Direito Constitucional",
+                "exemplo": "Interposto recurso extraordinário por violação a dispositivo constitucional."
+            },
+            "Liminar": {
+                "definicao": "Decisão judicial provisória para evitar dano irreparável.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "Concedida para suspender efeitos de ato administrativo.",
+                "area": "Direito Processual",
+                "exemplo": "Concedida liminar para suspender processo administrativo disciplinar."
+            },
+            "Prescrição": {
+                "definicao": "Perda do direito de ação pelo decurso do tempo.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "Aplicada para extinguir punibilidade no direito penal.",
+                "area": "Direito Civil",
+                "exemplo": "Reconhecida prescrição da ação de indenização após 3 anos."
+            },
+            "Fiança": {
+                "definicao": "Garantia pessoal para assegurar cumprimento de obrigação.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "Concedida como medida cautelar em processo penal.",
+                "area": "Direito Penal",
+                "exemplo": "Concedida fiança para assegurar liberdade provisória do acusado."
+            },
+            "Testemunha": {
+                "definicao": "Pessoa que depõe sobre fatos relevantes para o processo.",
+                "fonte": "STJ - Superior Tribunal de Justiça",
+                "jurisprudencia": "Oitiva obrigatória em processos criminais.",
+                "area": "Direito Processual",
+                "exemplo": "A testemunha confirmou o alegado pela parte autora."
+            }
         }
     
-    def buscar_termo_stf(self, termo):
-        try:
-            termos_stf = {
-                "Habeas Corpus": {
-                    "definicao": "Remédio constitucional que visa proteger o direito de locomoção do indivíduo, conforme art. 5º, LXVIII da CF/88.",
-                    "fonte": "STF - Supremo Tribunal Federal",
-                    "jurisprudencia": "HC 184.246/SP - Concedido para trancamento de ação penal por ausência de justa causa.",
-                    "area": "Direito Constitucional"
-                },
-                "Mandado de Segurança": {
-                    "definicao": "Ação constitucional para proteção de direito líquido e certo não amparado por HC ou HD.",
-                    "fonte": "STF - Supremo Tribunal Federal", 
-                    "jurisprudencia": "MS 34.567 - Concedido para assegurar direito a cargo público.",
-                    "area": "Direito Constitucional"
-                },
-                "Ação Rescisória": {
-                    "definicao": "Meio processual para desconstituir sentença transitada em julgado por vícios legais.",
-                    "fonte": "STF - Supremo Tribunal Federal",
-                    "jurisprudencia": "AR 5.432/DF - Admitida rescisão por documento novo.",
-                    "area": "Direito Processual Civil"
-                },
-                "Recurso Extraordinário": {
-                    "definicao": "Recurso cabível quando a decisão contraria a Constituição Federal.",
-                    "fonte": "STF - Supremo Tribunal Federal",
-                    "jurisprudencia": "RE 1.234.567 - Julgado procedente por ofensa à Constituição.",
-                    "area": "Direito Constitucional"
-                }
-            }
-            return termos_stf.get(termo, {})
-        except Exception as e:
-            return {"erro": f"Erro na consulta ao STF: {str(e)}"}
-    
-    def buscar_termo_stj(self, termo):
-        try:
-            termos_stj = {
-                "Usucapião": {
-                    "definicao": "Modo aquisitivo da propriedade pela posse prolongada nos termos legais.",
-                    "fonte": "STJ - Superior Tribunal de Justiça",
-                    "exemplo": "REsp 987.654/RS - Reconhecida usucapião extraordinária urbana.",
-                    "area": "Direito Civil"
-                },
-                "Desconsideração da Personalidade Jurídica": {
-                    "definicao": "Instrumento para ultrapassar autonomia patrimonial da pessoa jurídica.",
-                    "fonte": "STJ - Superior Tribunal de Justiça",
-                    "exemplo": "REsp 1.111.222/SP - Aplicada para responsabilizar sócios.",
-                    "area": "Direito Empresarial"
-                },
-                "Agravo de Instrumento": {
-                    "definicao": "Recurso contra decisão interlocutória que causa lesão grave.",
-                    "fonte": "STJ - Superior Tribunal de Justiça",
-                    "exemplo": "AgInt no REsp 2.222.333 - Admitido para rediscutir prova.",
-                    "area": "Direito Processual Civil"
-                }
-            }
-            return termos_stj.get(termo, {})
-        except Exception as e:
-            return {"erro": f"Erro na consulta ao STJ: {str(e)}"}
-    
-    def buscar_termo_camara(self, termo):
-        try:
-            termos_camara = {
-                "Princípio da Isonomia": {
-                    "definicao": "Princípio constitucional da igualdade de todos perante a lei (art. 5º, caput, CF/88).",
-                    "fonte": "Câmara dos Deputados",
-                    "legislacao": "Constituição Federal, Artigo 5º",
-                    "area": "Direito Constitucional"
-                },
-                "Crime Culposo": {
-                    "definicao": "Conduta voluntária com resultado ilícito não desejado por imprudência, negligência ou imperícia.",
-                    "fonte": "Câmara dos Deputados", 
-                    "legislacao": "Código Penal, Artigo 18, II",
-                    "area": "Direito Penal"
-                },
-                "Coisa Julgada": {
-                    "definicao": "Qualidade da sentença que não mais admite recurso, tornando-se imutável.",
-                    "fonte": "Câmara dos Deputados",
-                    "legislacao": "Código de Processo Civil, Artigo 502",
-                    "area": "Direito Processual Civil"
-                }
-            }
-            return termos_camara.get(termo, {})
-        except Exception as e:
-            return {"erro": f"Erro na consulta à Câmara: {str(e)}"}
+    def buscar_termo(self, termo):
+        return self.termos_completos.get(termo, {})
     
     def buscar_todos_termos(self):
-        try:
-            todos_termos = [
-                "Habeas Corpus", "Mandado de Segurança", "Ação Rescisória", "Usucapião",
-                "Princípio da Isonomia", "Crime Culposo", "Coisa Julgada", "Agravo de Instrumento",
-                "Desconsideração da Personalidade Jurídica", "Jus Postulandi", "Ação Civil Pública",
-                "Mandado de Injunção", "Habeas Data", "Ação Popular", "Liminar", "Recurso Especial",
-                "Recurso Extraordinário", "Sentença", "Acórdão", "Processo", "Petição Inicial",
-                "Contestação", "Prova", "Testemunha", "Perícia", "Arrolamento", "Arresto", "Sequestro",
-                "Busca e Apreensão", "Interceptação Telefônica", "Prisão Preventiva", "Prisão Temporária",
-                "Liberdade Provisória", "Fiança", "Sursis", "Transação Penal", "Suspensão Condicional do Processo"
-            ]
-            return todos_termos
-        except Exception as e:
-            return ["Habeas Corpus", "Mandado de Segurança", "Ação Rescisória"]
+        return list(self.termos_completos.keys())
 
-# Classe para Google News
+# Classe para Notícias (simulada)
 class GoogleNewsIntegracao:
     def buscar_noticias(self, termo):
-        try:
-            feeds = [
-                f"https://news.google.com/rss/search?q={termo}+direito+jurídico+Brasil&hl=pt-BR&gl=BR&ceid=BR:pt-419",
-                "https://www.migalhas.com.br/rss/quentes",
-                "https://www.conjur.com.br/rss.xml"
+        noticias_base = {
+            "Habeas Corpus": [
+                {
+                    "titulo": "STF concede habeas corpus e solta réu por falta de provas",
+                    "fonte": "Consultor Jurídico",
+                    "data": "2024-01-15",
+                    "resumo": "O Supremo Tribunal Federal concedeu habeas corpus para trancar ação penal contra acusado por insuficiência de provas.",
+                    "url": "#"
+                },
+                {
+                    "titulo": "Novo entendimento sobre habeas corpus em casos de prisão preventiva",
+                    "fonte": "Jornal do Direito",
+                    "data": "2024-01-10",
+                    "resumo": "Tribunais superiores discutem aplicação do habeas corpus em casos de prisão cautelar.",
+                    "url": "#"
+                }
+            ],
+            "Mandado de Segurança": [
+                {
+                    "titulo": "STJ define novos parâmetros para mandado de segurança",
+                    "fonte": "Migalhas",
+                    "data": "2024-01-12",
+                    "resumo": "Superior Tribunal de Justiça estabelece entendimento sobre direito líquido e certo.",
+                    "url": "#"
+                }
+            ],
+            "Ação Rescisória": [
+                {
+                    "titulo": "STJ admite ação rescisória por descoberta de documento novo",
+                    "fonte": "ConJur",
+                    "data": "2024-01-08",
+                    "resumo": "Superior Tribunal de Justiça reconhece possibilidade de rescisão de sentença por documento não conhecido.",
+                    "url": "#"
+                }
+            ],
+            "Usucapião": [
+                {
+                    "titulo": "Usucapião: posse mansa e pacífica por 15 anos garante propriedade",
+                    "fonte": "JusBrasil",
+                    "data": "2024-01-05",
+                    "resumo": "Decisão do TJSP reconhece direito de propriedade via usucapião extraordinária.",
+                    "url": "#"
+                }
             ]
-            
-            noticias = []
-            for feed_url in feeds:
-                try:
-                    feed = feedparser.parse(feed_url)
-                    for entry in feed.entries[:3]:
-                        if termo.lower() in entry.title.lower() or termo.lower() in entry.summary.lower():
-                            noticias.append({
-                                "titulo": entry.title,
-                                "fonte": entry.get('source', {}).get('title', 'Google News'),
-                                "data": entry.published if hasattr(entry, 'published') else datetime.now().strftime("%Y-%m-%d"),
-                                "resumo": entry.summary[:200] + "...",
-                                "url": entry.link
-                            })
-                except:
-                    continue
-            
-            if not noticias:
-                noticias = self._noticias_simuladas(termo)
-            
-            return noticias[:5]
-            
-        except Exception as e:
-            return self._noticias_simuladas(termo)
-    
-    def _noticias_simuladas(self, termo):
-        return [{
-            "titulo": f"Notícias sobre {termo} - Portal Jurídico",
-            "fonte": "Glossário Jurídico",
-            "data": datetime.now().strftime("%Y-%m-%d"),
-            "resumo": f"Em breve traremos as últimas notícias sobre {termo} dos principais portais jurídicos.",
-            "url": "#"
-        }]
+        }
+        
+        noticias_termo = noticias_base.get(termo, [])
+        
+        if not noticias_termo:
+            noticias_termo = [{
+                "titulo": f"Notícias sobre {termo} - Em atualização",
+                "fonte": "Glossário Jurídico",
+                "data": datetime.now().strftime("%Y-%m-%d"),
+                "resumo": f"Em breve traremos notícias atualizadas sobre {termo} dos principais portais jurídicos.",
+                "url": "#"
+            }]
+        
+        return noticias_termo
 
 # Sistema de cache para dados
-@st.cache_data(ttl=3600)
+@st.cache_data
 def carregar_dados_glossario():
     api = APIGlossarioJuridico()
     
     termos_lista = api.buscar_todos_termos()
     dados = []
     
-    for termo in termos_lista[:25]:
-        dados_stf = api.buscar_termo_stf(termo)
-        dados_stj = api.buscar_termo_stj(termo) 
-        dados_camara = api.buscar_termo_camara(termo)
-        
-        definicao_final = ""
-        fonte_final = ""
-        area_final = "Direito"
-        exemplo_final = ""
-        
-        if dados_stf and 'definicao' in dados_stf:
-            definicao_final = dados_stf['definicao']
-            fonte_final = dados_stf['fonte']
-            area_final = dados_stf.get('area', 'Direito Constitucional')
-            exemplo_final = dados_stf.get('jurisprudencia', '')
-        elif dados_stj and 'definicao' in dados_stj:
-            definicao_final = dados_stj['definicao']
-            fonte_final = dados_stj['fonte']
-            area_final = dados_stj.get('area', 'Direito Processual')
-            exemplo_final = dados_stj.get('exemplo', '')
-        elif dados_camara and 'definicao' in dados_camara:
-            definicao_final = dados_camara['definicao']
-            fonte_final = dados_camara['fonte']
-            area_final = dados_camara.get('area', 'Direito')
-            exemplo_final = dados_camara.get('legislacao', '')
-        
-        if not definicao_final:
-            definicao_final = f"Termo jurídico {termo} - consultar fontes oficiais para definição completa."
-            fonte_final = "Sistema Jurídico Brasileiro"
+    for termo in termos_lista:
+        dados_termo = api.buscar_termo(termo)
         
         dados.append({
             "termo": termo,
-            "definicao": definicao_final,
-            "area": area_final,
-            "fonte": fonte_final,
+            "definicao": dados_termo.get("definicao", "Definição em atualização."),
+            "area": dados_termo.get("area", "Direito"),
+            "fonte": dados_termo.get("fonte", "Fonte oficial"),
             "data": datetime.now().strftime("%Y-%m-%d"),
-            "exemplo": exemplo_final,
+            "exemplo": dados_termo.get("exemplo", "Exemplo prático em atualização."),
             "sinonimos": _gerar_sinonimos(termo),
             "relacionados": _gerar_relacionados(termo),
-            "detalhes": f"Termo consultado em {fonte_final}"
+            "detalhes": dados_termo.get("jurisprudencia", "Jurisprudência em atualização.")
         })
     
     return pd.DataFrame(dados)
@@ -295,7 +290,8 @@ def _gerar_sinonimos(termo):
         "Usucapião": ["Prescrição Aquisitiva"],
         "Crime Culposo": ["Delito Culposo", "Culpa"],
         "Coisa Julgada": ["Res Judicata"],
-        "Agravo de Instrumento": ["Agravo"]
+        "Agravo de Instrumento": ["Agravo"],
+        "Jus Postulandi": ["Capacidade Postulatória"]
     }
     return sinonimos_map.get(termo, [])
 
@@ -306,7 +302,9 @@ def _gerar_relacionados(termo):
         "Ação Rescisória": ["Coisa Julgada", "Recurso", "Sentença"],
         "Usucapião": ["Propriedade", "Posse", "Direito Real"],
         "Crime Culposo": ["Crime Doloso", "Culpa", "Dolo"],
-        "Coisa Julgada": ["Sentença", "Recurso", "Processo"]
+        "Coisa Julgada": ["Sentença", "Recurso", "Processo"],
+        "Agravo de Instrumento": ["Recurso", "Decisão Interlocutória"],
+        "Jus Postulandi": ["Legitimidade", "Capacidade Processual"]
     }
     return relacionados_map.get(termo, ["Direito", "Jurisprudência", "Legislação"])
 
@@ -473,33 +471,11 @@ def exibir_pagina_termo(df, termo_nome):
         st.markdown("### 📖 Definição Oficial")
         st.info(termo_data['definicao'])
         
-        if termo_data['exemplo']:
-            st.markdown("### 💼 Exemplo Prático")
-            st.success(termo_data['exemplo'])
+        st.markdown("### 💼 Exemplo Prático")
+        st.success(termo_data['exemplo'])
         
-        st.markdown("### ⚖️ Consulta em Tempo Real")
-        
-        col_api1, col_api2 = st.columns(2)
-        
-        with col_api1:
-            with st.expander("🔍 STF - Supremo Tribunal Federal", expanded=True):
-                dados_stf = api.buscar_termo_stf(termo_nome)
-                if dados_stf and 'definicao' in dados_stf:
-                    st.write(f"**Definição STF:** {dados_stf['definicao']}")
-                    if 'jurisprudencia' in dados_stf:
-                        st.caption(f"*{dados_stf['jurisprudencia']}*")
-                else:
-                    st.write("Consultando API do STF...")
-        
-        with col_api2:
-            with st.expander("🔍 STJ - Superior Tribunal de Justiça", expanded=True):
-                dados_stj = api.buscar_termo_stj(termo_nome)
-                if dados_stj and 'definicao' in dados_stj:
-                    st.write(f"**Definição STJ:** {dados_stj['definicao']}")
-                    if 'exemplo' in dados_stj:
-                        st.caption(f"*{dados_stj['exemplo']}*")
-                else:
-                    st.write("Consultando API do STJ...")
+        st.markdown("### ⚖️ Jurisprudência")
+        st.write(termo_data['detalhes'])
     
     with col_lateral:
         st.markdown("### 🏷️ Informações")
@@ -541,13 +517,7 @@ def exibir_pagina_noticias():
     
     st.info("Busque notícias sobre termos jurídicos específicos na página de detalhes de cada termo.")
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        termo_geral = st.text_input("🔍 Buscar notícias sobre:")
-    
-    with col2:
-        fonte = st.selectbox("Fonte:", ["Todas", "Google News", "Migalhas", "Consultor Jurídico"])
+    termo_geral = st.text_input("🔍 Buscar notícias sobre:")
     
     if termo_geral:
         news = GoogleNewsIntegracao()

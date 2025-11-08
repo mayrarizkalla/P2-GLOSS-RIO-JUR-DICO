@@ -91,7 +91,6 @@ class APIGlossarioJuridico:
     def buscar_dados_api_stf(self, termo):
         """Busca dados reais do STF (simulação de API real)"""
         try:
-            # Em produção, isso seria substituído por requests para a API real do STF
             stf_dados = self._get_stf_data()
             return stf_dados.get(termo, {})
         except:
@@ -524,7 +523,7 @@ def _gerar_relacionados(termo):
     }
     return relacionados_map.get(termo, ["Direito", "Jurisprudência", "Legislação"])
 
-# Funções de visualização (mantidas iguais)
+# Funções de visualização
 def criar_grafico_areas(df):
     contagem_areas = df['area'].value_counts().reset_index()
     contagem_areas.columns = ['Área', 'Quantidade']
@@ -563,7 +562,7 @@ def criar_grafico_fontes(df):
     
     return fig
 
-# Páginas do aplicativo (mantidas iguais)
+# Páginas do aplicativo
 def exibir_pagina_inicial(df):
     st.markdown("### 🎯 Bem-vindo ao Glossário Jurídico Digital")
     st.markdown("**Descomplicando o Direito** através de definições claras e atualizadas.")
@@ -697,3 +696,125 @@ def exibir_pagina_termo(df, termo_nome):
         st.markdown("### 🏷️ Informações")
         
         if termo_data['sinonimos']:
+            st.markdown("**Sinônimos:**")
+            for sinonimo in termo_data['sinonimos']:
+                st.write(f"• {sinonimo}")
+        
+        st.markdown("**Relacionados:**")
+        for relacionado in termo_data['relacionados']:
+            if st.button(f"→ {relacionado}", key=f"rel_{relacionado}"):
+                if relacionado in df['termo'].values:
+                    st.session_state.termo_selecionado = relacionado
+                    st.rerun()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("### 📰 Notícias Recentes")
+    
+    with st.spinner("Buscando notícias..."):
+        noticias = news.buscar_noticias(termo_nome)
+    
+    if noticias:
+        for noticia in noticias:
+            with st.container():
+                st.markdown(f'<div class="news-card">', unsafe_allow_html=True)
+                
+                st.markdown(f"#### {noticia['titulo']}")
+                st.write(noticia['resumo'])
+                st.caption(f"**Fonte:** {noticia['fonte']} | **Data:** {noticia['data']}")
+                
+                st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        st.info("Não foram encontradas notícias recentes para este termo.")
+
+def exibir_pagina_noticias():
+    st.markdown("### 📰 Notícias Jurídicas")
+    
+    st.info("Busque notícias sobre termos jurídicos específicos na página de detalhes de cada termo.")
+    
+    termo_geral = st.text_input("🔍 Buscar notícias sobre:")
+    
+    if termo_geral:
+        news = GoogleNewsIntegracao()
+        with st.spinner("Buscando notícias..."):
+            noticias = news.buscar_noticias(termo_geral)
+        
+        if noticias:
+            for noticia in noticias:
+                st.write(f"**{noticia['titulo']}**")
+                st.caption(f"{noticia['fonte']} - {noticia['data']}")
+                st.write(noticia['resumo'])
+                st.markdown("---")
+        else:
+            st.warning("Nenhuma notícia encontrada.")
+
+def exibir_pagina_sobre():
+    st.markdown("### ℹ️ Sobre o Projeto")
+    st.write("""
+    **Glossário Jurídico: Descomplicando o Direito**
+    
+    **Desenvolvido por:** Carolina Souza, Lara Carneiro e Mayra Rizkalla
+    **Turma A** - Projeto P2 Programação
+    
+    **🎯 Objetivos:**
+    - Fornecer definições claras de termos jurídicos
+    - Contextualizar conceitos com exemplos práticos
+    - Integrar notícias relacionadas aos termos
+    - Oferecer ferramenta de estudo gratuita
+    
+    **⚙️ Tecnologias:**
+    - Streamlit para interface web
+    - Python como linguagem principal
+    - APIs jurídicas para dados atualizados
+    - Plotly para visualizações interativas
+    
+    **📞 Fontes Oficiais:**
+    - STF (Supremo Tribunal Federal)
+    - STJ (Superior Tribunal de Justiça)
+    - Câmara dos Deputados
+    - Base de dados do Planalto
+    """)
+
+# App principal
+def main():
+    st.markdown('<h1 class="main-header">⚖️ Glossário Jurídico</h1>', unsafe_allow_html=True)
+    st.markdown("### Descomplicando o Direito para estudantes e leigos")
+    
+    df = carregar_dados_glossario()
+    
+    # Sidebar
+    with st.sidebar:
+        st.image("https://cdn.pixabay.com/photo/2017/01/31/14/26/law-2024670_1280.png", width=80)
+        st.title("🔍 Navegação")
+        
+        st.subheader("Buscar Termo")
+        termo_busca = st.text_input("Digite o termo jurídico:")
+        
+        st.subheader("Filtros")
+        area_selecionada = st.selectbox("Área do Direito", ["Todas"] + list(df['area'].unique()))
+        
+        st.subheader("Termos Populares")
+        for termo in df['termo'].head(6):
+            if st.button(termo, key=f"side_{termo}"):
+                st.session_state.termo_selecionado = termo
+                st.rerun()
+        
+        st.markdown("---")
+        st.metric("Total de Termos", len(df))
+    
+    # Rotas
+    if st.session_state.termo_selecionado:
+        exibir_pagina_termo(df, st.session_state.termo_selecionado)
+    else:
+        tab1, tab2, tab3, tab4 = st.tabs(["🏠 Início", "📚 Explorar", "📰 Notícias", "ℹ️ Sobre"])
+        with tab1:
+            exibir_pagina_inicial(df)
+        with tab2:
+            exibir_explorar_termos(df, area_selecionada, termo_busca)
+        with tab3:
+            exibir_pagina_noticias()
+        with tab4:
+            exibir_pagina_sobre()
+
+if __name__ == "__main__":
+    main()

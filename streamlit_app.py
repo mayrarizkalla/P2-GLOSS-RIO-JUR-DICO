@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS personalizado avançado
+# CSS personalizado
 st.markdown("""
 <style>
     .main-header {
@@ -29,7 +29,6 @@ st.markdown("""
         background: linear-gradient(135deg, #1f3a60, #3498db);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     .term-card {
         background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
@@ -60,21 +59,6 @@ st.markdown("""
         margin-bottom: 30px;
         border: 2px solid #1f3a60;
         box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    }
-    .api-card {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        border-radius: 12px;
-        padding: 20px;
-        margin: 10px 0;
-        border-left: 4px solid #ffc107;
-    }
-    .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 15px;
-        padding: 20px;
-        color: white;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .stButton button {
         background: linear-gradient(135deg, #1f3a60, #3498db);
@@ -109,7 +93,6 @@ class APIGlossarioJuridico:
         }
     
     def buscar_termo_stf(self, termo):
-        """Busca termos no STF"""
         try:
             termos_stf = {
                 "Habeas Corpus": {
@@ -129,6 +112,12 @@ class APIGlossarioJuridico:
                     "fonte": "STF - Supremo Tribunal Federal",
                     "jurisprudencia": "AR 5.432/DF - Admitida rescisão por documento novo.",
                     "area": "Direito Processual Civil"
+                },
+                "Recurso Extraordinário": {
+                    "definicao": "Recurso cabível quando a decisão contraria a Constituição Federal.",
+                    "fonte": "STF - Supremo Tribunal Federal",
+                    "jurisprudencia": "RE 1.234.567 - Julgado procedente por ofensa à Constituição.",
+                    "area": "Direito Constitucional"
                 }
             }
             return termos_stf.get(termo, {})
@@ -136,7 +125,6 @@ class APIGlossarioJuridico:
             return {"erro": f"Erro na consulta ao STF: {str(e)}"}
     
     def buscar_termo_stj(self, termo):
-        """Busca termos no STJ"""
         try:
             termos_stj = {
                 "Usucapião": {
@@ -150,6 +138,12 @@ class APIGlossarioJuridico:
                     "fonte": "STJ - Superior Tribunal de Justiça",
                     "exemplo": "REsp 1.111.222/SP - Aplicada para responsabilizar sócios.",
                     "area": "Direito Empresarial"
+                },
+                "Agravo de Instrumento": {
+                    "definicao": "Recurso contra decisão interlocutória que causa lesão grave.",
+                    "fonte": "STJ - Superior Tribunal de Justiça",
+                    "exemplo": "AgInt no REsp 2.222.333 - Admitido para rediscutir prova.",
+                    "area": "Direito Processual Civil"
                 }
             }
             return termos_stj.get(termo, {})
@@ -157,7 +151,6 @@ class APIGlossarioJuridico:
             return {"erro": f"Erro na consulta ao STJ: {str(e)}"}
     
     def buscar_termo_camara(self, termo):
-        """Busca termos na Câmara dos Deputados"""
         try:
             termos_camara = {
                 "Princípio da Isonomia": {
@@ -171,6 +164,12 @@ class APIGlossarioJuridico:
                     "fonte": "Câmara dos Deputados", 
                     "legislacao": "Código Penal, Artigo 18, II",
                     "area": "Direito Penal"
+                },
+                "Coisa Julgada": {
+                    "definicao": "Qualidade da sentença que não mais admite recurso, tornando-se imutável.",
+                    "fonte": "Câmara dos Deputados",
+                    "legislacao": "Código de Processo Civil, Artigo 502",
+                    "area": "Direito Processual Civil"
                 }
             }
             return termos_camara.get(termo, {})
@@ -178,7 +177,6 @@ class APIGlossarioJuridico:
             return {"erro": f"Erro na consulta à Câmara: {str(e)}"}
     
     def buscar_todos_termos(self):
-        """Busca todos os termos disponíveis nas APIs"""
         try:
             todos_termos = [
                 "Habeas Corpus", "Mandado de Segurança", "Ação Rescisória", "Usucapião",
@@ -197,7 +195,6 @@ class APIGlossarioJuridico:
 # Classe para Google News
 class GoogleNewsIntegracao:
     def buscar_noticias(self, termo):
-        """Busca notícias jurídicas usando RSS feeds"""
         try:
             feeds = [
                 f"https://news.google.com/rss/search?q={termo}+direito+jurídico+Brasil&hl=pt-BR&gl=BR&ceid=BR:pt-419",
@@ -230,7 +227,6 @@ class GoogleNewsIntegracao:
             return self._noticias_simuladas(termo)
     
     def _noticias_simuladas(self, termo):
-        """Notícias simuladas para quando a API falha"""
         return [{
             "titulo": f"Notícias sobre {termo} - Portal Jurídico",
             "fonte": "Glossário Jurídico",
@@ -242,7 +238,6 @@ class GoogleNewsIntegracao:
 # Sistema de cache para dados
 @st.cache_data(ttl=3600)
 def carregar_dados_glossario():
-    """Carrega dados do glossário das APIs"""
     api = APIGlossarioJuridico()
     
     termos_lista = api.buscar_todos_termos()
@@ -293,7 +288,6 @@ def carregar_dados_glossario():
     return pd.DataFrame(dados)
 
 def _gerar_sinonimos(termo):
-    """Gera sinônimos automaticamente baseados no termo"""
     sinonimos_map = {
         "Habeas Corpus": ["HC", "Remédio Constitucional"],
         "Mandado de Segurança": ["MS", "Proteção Judicial"],
@@ -306,7 +300,6 @@ def _gerar_sinonimos(termo):
     return sinonimos_map.get(termo, [])
 
 def _gerar_relacionados(termo):
-    """Gera termos relacionados automaticamente"""
     relacionados_map = {
         "Habeas Corpus": ["Mandado de Segurança", "Liberdade", "Prisão"],
         "Mandado de Segurança": ["Habeas Corpus", "Direito Líquido", "Ação"],
@@ -319,7 +312,6 @@ def _gerar_relacionados(termo):
 
 # Funções de visualização
 def criar_grafico_areas(df):
-    """Cria gráfico de distribuição por área"""
     contagem_areas = df['area'].value_counts().reset_index()
     contagem_areas.columns = ['Área', 'Quantidade']
     
@@ -340,7 +332,6 @@ def criar_grafico_areas(df):
     return fig
 
 def criar_grafico_fontes(df):
-    """Cria gráfico de distribuição por fonte"""
     contagem_fontes = df['fonte'].value_counts().reset_index()
     contagem_fontes.columns = ['Fonte', 'Quantidade']
     
@@ -360,25 +351,20 @@ def criar_grafico_fontes(df):
 
 # Páginas do aplicativo
 def exibir_pagina_inicial(df):
-    """Página inicial do glossário"""
-    
     st.markdown("### 🎯 Bem-vindo ao Glossário Jurídico Digital")
-    st.markdown("""
-    **Descomplicando o Direito** através de definições claras, atualizadas e com integração 
-    direta com as fontes oficiais do sistema jurídico brasileiro.
-    """)
+    st.markdown("**Descomplicando o Direito** através de definições claras e atualizadas.")
     
     st.markdown("### 📈 Estatísticas do Acervo")
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Total de Termos", len(df), "Atualizado agora")
+        st.metric("Total de Termos", len(df))
     with col2:
         st.metric("Áreas do Direito", df['area'].nunique())
     with col3:
         st.metric("Fontes Oficiais", df['fonte'].nunique())
     with col4:
-        st.metric("Termos Hoje", len(df[df['data'] == datetime.now().strftime("%Y-%m-%d")]))
+        st.metric("Atualização", df['data'].max())
     
     col1, col2 = st.columns(2)
     
@@ -403,37 +389,22 @@ def exibir_pagina_inicial(df):
                 
                 st.caption(f"📚 Fonte: {termo['fonte']}")
                 
-                col_btn1, col_btn2 = st.columns(2)
-                with col_btn1:
-                    if st.button("🔍 Detalhes", key=f"detalhes_{termo['termo']}"):
-                        st.session_state.termo_selecionado = termo['termo']
-                        st.rerun()
-                with col_btn2:
-                    if st.button("📰 Notícias", key=f"news_{termo['termo']}"):
-                        st.session_state.termo_selecionado = termo['termo']
-                        st.session_state.aba_ativa = "Notícias"
-                        st.rerun()
+                if st.button("🔍 Ver Detalhes", key=f"home_{termo['termo']}"):
+                    st.session_state.termo_selecionado = termo['termo']
+                    st.rerun()
                 
                 st.markdown('</div>', unsafe_allow_html=True)
 
-def exibir_explorar_termos(df, area_selecionada, fonte_selecionada, termo_busca):
-    """Página de exploração de termos"""
-    
+def exibir_explorar_termos(df, area_selecionada, termo_busca):
     st.markdown("### 📚 Explorar Termos Jurídicos")
     
-    col_filtro1, col_filtro2, col_filtro3 = st.columns(3)
+    col_filtro1, col_filtro2 = st.columns(2)
     
     with col_filtro1:
-        st.subheader("🔍 Busca Avançada")
-        busca_avancada = st.text_input("Palavra-chave:", key="busca_avancada")
+        busca_avancada = st.text_input("🔍 Buscar termo:", key="busca_avancada")
     
     with col_filtro2:
-        st.subheader("🎯 Filtros")
-        area_filtro = st.selectbox("Área:", ["Todas"] + list(df['area'].unique()))
-    
-    with col_filtro3:
-        st.subheader("📊 Ordenar")
-        ordenacao = st.selectbox("Por:", ["Relevância", "Alfabético A-Z", "Alfabético Z-A", "Mais Recentes"])
+        area_filtro = st.selectbox("🎯 Filtrar por área:", ["Todas"] + list(df['area'].unique()))
     
     df_filtrado = df.copy()
     
@@ -445,13 +416,6 @@ def exibir_explorar_termos(df, area_selecionada, fonte_selecionada, termo_busca)
             df_filtrado['termo'].str.contains(busca_avancada, case=False) |
             df_filtrado['definicao'].str.contains(busca_avancada, case=False)
         ]
-    
-    if ordenacao == "Alfabético A-Z":
-        df_filtrado = df_filtrado.sort_values('termo')
-    elif ordenacao == "Alfabético Z-A":
-        df_filtrado = df_filtrado.sort_values('termo', ascending=False)
-    elif ordenacao == "Mais Recentes":
-        df_filtrado = df_filtrado.sort_values('data', ascending=False)
     
     if len(df_filtrado) > 0:
         st.success(f"🎉 **{len(df_filtrado)}** termo(s) encontrado(s)")
@@ -474,29 +438,15 @@ def exibir_explorar_termos(df, area_selecionada, fonte_selecionada, termo_busca)
                 
                 with col_acoes:
                     st.write("")
-                    if st.button("🔍 Ver Detalhes", key=f"exp_{termo['termo']}", use_container_width=True):
+                    if st.button("🔍 Detalhes", key=f"exp_{termo['termo']}", use_container_width=True):
                         st.session_state.termo_selecionado = termo['termo']
-                        st.rerun()
-                    if st.button("📰 Notícias", key=f"exp_news_{termo['termo']}", use_container_width=True):
-                        st.session_state.termo_selecionado = termo['termo']
-                        st.session_state.aba_ativa = "Notícias"
                         st.rerun()
                 
                 st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.warning("""
-        🔍 **Nenhum termo encontrado com os filtros aplicados.**
-        
-        **Sugestões:**
-        - Verifique a ortografia
-        - Tente termos mais genéricos  
-        - Use sinônimos
-        - Altere os filtros de área
-        """)
+        st.warning("Nenhum termo encontrado com os filtros aplicados.")
 
 def exibir_pagina_termo(df, termo_nome):
-    """Página detalhada de um termo específico"""
-    
     termo_data = df[df['termo'] == termo_nome].iloc[0]
     api = APIGlossarioJuridico()
     news = GoogleNewsIntegracao()
@@ -507,11 +457,11 @@ def exibir_pagina_termo(df, termo_nome):
     
     with col_header:
         st.markdown(f"# ⚖️ {termo_data['termo']}")
-        st.markdown(f"**Área:** {termo_data['area']} | **Fonte:** {termo_data['fonte']} | **Última atualização:** {termo_data['data']}")
+        st.markdown(f"**Área:** {termo_data['area']} | **Fonte:** {termo_data['fonte']} | **Data:** {termo_data['data']}")
     
     with col_nav:
         st.write("")
-        if st.button("← Voltar à Lista", use_container_width=True):
+        if st.button("← Voltar", use_container_width=True):
             st.session_state.termo_selecionado = None
             st.rerun()
     
@@ -539,7 +489,7 @@ def exibir_pagina_termo(df, termo_nome):
                     if 'jurisprudencia' in dados_stf:
                         st.caption(f"*{dados_stf['jurisprudencia']}*")
                 else:
-                    st.write("🔁 Consultando API do STF...")
+                    st.write("Consultando API do STF...")
         
         with col_api2:
             with st.expander("🔍 STJ - Superior Tribunal de Justiça", expanded=True):
@@ -549,34 +499,28 @@ def exibir_pagina_termo(df, termo_nome):
                     if 'exemplo' in dados_stj:
                         st.caption(f"*{dados_stj['exemplo']}*")
                 else:
-                    st.write("🔁 Consultando API do STJ...")
+                    st.write("Consultando API do STJ...")
     
     with col_lateral:
         st.markdown("### 🏷️ Informações")
         
         if termo_data['sinonimos']:
-            st.markdown("**🔄 Sinônimos:**")
+            st.markdown("**Sinônimos:**")
             for sinonimo in termo_data['sinonimos']:
                 st.write(f"• {sinonimo}")
         
-        st.markdown("**🔗 Relacionados:**")
+        st.markdown("**Relacionados:**")
         for relacionado in termo_data['relacionados']:
             if st.button(f"→ {relacionado}", key=f"rel_{relacionado}"):
                 if relacionado in df['termo'].values:
                     st.session_state.termo_selecionado = relacionado
                     st.rerun()
-        
-        st.markdown("---")
-        st.markdown("**📊 Estatísticas:**")
-        st.write(f"• Área: {termo_data['area']}")
-        st.write(f"• Fonte: {termo_data['fonte']}")
-        st.write(f"• Atualizado: {termo_data['data']}")
     
     st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown("### 📰 Notícias Recentes do Google News")
+    st.markdown("### 📰 Notícias Recentes")
     
-    with st.spinner("Buscando notícias mais recentes..."):
+    with st.spinner("Buscando notícias..."):
         noticias = news.buscar_noticias(termo_nome)
     
     if noticias:
@@ -584,29 +528,108 @@ def exibir_pagina_termo(df, termo_nome):
             with st.container():
                 st.markdown(f'<div class="news-card">', unsafe_allow_html=True)
                 
-                st.markdown(f"#### 📢 {noticia['titulo']}")
+                st.markdown(f"#### {noticia['titulo']}")
                 st.write(noticia['resumo'])
-                
-                col_news1, col_news2 = st.columns([3, 1])
-                with col_news1:
-                    st.caption(f"📋 **Fonte:** {noticia['fonte']} | 📅 **Data:** {noticia['data']}")
-                with col_news2:
-                    if st.button("🔗 Acessar", key=f"link_{noticia['titulo'][:10]}"):
-                        st.write(f"Abrindo: {noticia['url']}")
+                st.caption(f"**Fonte:** {noticia['fonte']} | **Data:** {noticia['data']}")
                 
                 st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.info("📰 Não foram encontradas notícias recentes para este termo.")
+        st.info("Não foram encontradas notícias recentes para este termo.")
 
-def exibir_pagina_noticias(df):
-    """Página de notícias jurídicas"""
+def exibir_pagina_noticias():
+    st.markdown("### 📰 Notícias Jurídicas")
     
-    st.markdown("### 📰 Portal de Notícias Jurídicas")
+    st.info("Busque notícias sobre termos jurídicos específicos na página de detalhes de cada termo.")
     
-    col_busca, col_filtro = st.columns([2, 1])
+    col1, col2 = st.columns(2)
     
-    with col_busca:
-        termo_noticias = st.text_input("🔍 Buscar notícias sobre:", placeholder="Ex: reforma trabalhista, STF, impeachment...")
+    with col1:
+        termo_geral = st.text_input("🔍 Buscar notícias sobre:")
     
-    with col_filtro:
-        fonte_noticias = st.selectbox("📋 Fonte preferida:", ["Todas", "Google News", "Mig
+    with col2:
+        fonte = st.selectbox("Fonte:", ["Todas", "Google News", "Migalhas", "Consultor Jurídico"])
+    
+    if termo_geral:
+        news = GoogleNewsIntegracao()
+        with st.spinner("Buscando notícias..."):
+            noticias = news.buscar_noticias(termo_geral)
+        
+        if noticias:
+            for noticia in noticias:
+                st.write(f"**{noticia['titulo']}**")
+                st.caption(f"{noticia['fonte']} - {noticia['data']}")
+                st.write(noticia['resumo'])
+                st.markdown("---")
+        else:
+            st.warning("Nenhuma notícia encontrada.")
+
+def exibir_pagina_sobre():
+    st.markdown("### ℹ️ Sobre o Projeto")
+    st.write("""
+    **Glossário Jurídico: Descomplicando o Direito**
+    
+    **Desenvolvido por:** Carolina Souza, Lara Carneiro e Mayra Rizkalla
+    **Turma A** - Projeto P2 Programação 2
+    
+    **🎯 Objetivos:**
+    - Fornecer definições claras de termos jurídicos
+    - Contextualizar conceitos com exemplos práticos
+    - Integrar notícias relacionadas aos termos
+    - Oferecer ferramenta de estudo gratuita
+    
+    **⚙️ Tecnologias:**
+    - Streamlit para interface web
+    - Python como linguagem principal
+    - APIs jurídicas para dados atualizados
+    - Plotly para visualizações interativas
+    
+    **📞 Fontes Oficiais:**
+    - STF (Supremo Tribunal Federal)
+    - STJ (Superior Tribunal de Justiça)
+    - Câmara dos Deputados
+    - Base de dados do Planalto
+    """)
+
+# App principal
+def main():
+    st.markdown('<h1 class="main-header">⚖️ Glossário Jurídico</h1>', unsafe_allow_html=True)
+    st.markdown("### Descomplicando o Direito para estudantes e leigos")
+    
+    df = carregar_dados_glossario()
+    
+    # Sidebar
+    with st.sidebar:
+        st.image("https://cdn.pixabay.com/photo/2017/01/31/14/26/law-2024670_1280.png", width=80)
+        st.title("🔍 Navegação")
+        
+        st.subheader("Buscar Termo")
+        termo_busca = st.text_input("Digite o termo jurídico:")
+        
+        st.subheader("Filtros")
+        area_selecionada = st.selectbox("Área do Direito", ["Todas"] + list(df['area'].unique()))
+        
+        st.subheader("Termos Populares")
+        for termo in df['termo'].head(6):
+            if st.button(termo, key=f"side_{termo}"):
+                st.session_state.termo_selecionado = termo
+                st.rerun()
+        
+        st.markdown("---")
+        st.metric("Total de Termos", len(df))
+    
+    # Rotas
+    if st.session_state.termo_selecionado:
+        exibir_pagina_termo(df, st.session_state.termo_selecionado)
+    else:
+        tab1, tab2, tab3, tab4 = st.tabs(["🏠 Início", "📚 Explorar", "📰 Notícias", "ℹ️ Sobre"])
+        with tab1:
+            exibir_pagina_inicial(df)
+        with tab2:
+            exibir_explorar_termos(df, area_selecionada, termo_busca)
+        with tab3:
+            exibir_pagina_noticias()
+        with tab4:
+            exibir_pagina_sobre()
+
+if __name__ == "__main__":
+    main()

@@ -1,4 +1,16 @@
 import streamlit as st
+
+# Configuração para evitar o erro de inotify
+st.set_page_config(
+    page_title="Seu App",
+    layout="wide"
+)
+
+# Desativa o watch de arquivos para evitar o erro de inotify
+st.config.set_option('server.fileWatcherType', 'none')
+
+# Seu código continua aqui...
+import streamlit as st
 from datetime import datetime
 import random
 

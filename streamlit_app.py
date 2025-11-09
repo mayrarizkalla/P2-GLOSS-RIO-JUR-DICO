@@ -81,7 +81,7 @@ st.markdown("""
 if 'termo_selecionado' not in st.session_state:
     st.session_state.termo_selecionado = None
 
-# Dados completos do glossário (SEM PANDAS)
+# Dados completos do glossário (41 TERMOS EXATOS)
 GLOSSARIO_DADOS = [
     {
         "termo": "Habeas Corpus",
@@ -104,6 +104,36 @@ GLOSSARIO_DADOS = [
         "relacionados": ["Habeas Corpus", "Direito Líquido", "Ação", "Remédio Constitucional"]
     },
     {
+        "termo": "Recurso Extraordinário",
+        "definicao": "Recurso cabível quando a decisão contraria a Constituição Federal.",
+        "fonte": "STF - Supremo Tribunal Federal",
+        "jurisprudencia": "RE 1.234.567 - Julgado procedente por ofensa à Constituição.",
+        "area": "Direito Constitucional",
+        "exemplo": "O recurso extraordinário foi interposto para questionar decisão que violou a Constituição Federal.",
+        "sinonimos": ["RE"],
+        "relacionados": ["STF", "Constituição", "Controle de Constitucionalidade"]
+    },
+    {
+        "termo": "Arguição de Descumprimento de Preceito Fundamental",
+        "definicao": "Ação para evitar ou reparar lesão a preceito fundamental.",
+        "fonte": "STF - Supremo Tribunal Federal",
+        "jurisprudencia": "ADPF 100 - Julgada procedente para proteger direito fundamental.",
+        "area": "Direito Constitucional",
+        "exemplo": "A ADPF foi ajuizada para questionar lei que violava preceito fundamental.",
+        "sinonimos": ["ADPF"],
+        "relacionados": ["Controle de Constitucionalidade", "STF"]
+    },
+    {
+        "termo": "Súmula Vinculante",
+        "definicao": "Enunciado aprovado pelo STF com efeito vinculante.",
+        "fonte": "STF - Supremo Tribunal Federal",
+        "jurisprudencia": "Súmula 10 - Viola dispositivo de lei federal a decisão que...",
+        "area": "Direito Constitucional",
+        "exemplo": "A súmula vinculante foi aplicada para uniformizar jurisprudência.",
+        "sinonimos": ["Súmula"],
+        "relacionados": ["STF", "Jurisprudência"]
+    },
+    {
         "termo": "Ação Rescisória",
         "definicao": "Meio processual para desconstituir sentença transitada em julgado por vícios legais.",
         "fonte": "STJ - Superior Tribunal de Justiça",
@@ -122,6 +152,66 @@ GLOSSARIO_DADOS = [
         "exemplo": "O proprietário adquiriu o imóvel por usucapião após 15 anos de posse mansa e pacífica.",
         "sinonimos": ["Prescrição Aquisitiva"],
         "relacionados": ["Propriedade", "Posse", "Direito Real", "Direito Civil"]
+    },
+    {
+        "termo": "Agravo de Instrumento",
+        "definicao": "Recurso contra decisão interlocutória que causa lesão grave.",
+        "fonte": "STJ - Superior Tribunal de Justiça",
+        "jurisprudencia": "AgInt no REsp 2.222.333 - Admitido para rediscutir prova.",
+        "area": "Direito Processual Civil",
+        "exemplo": "O agravo foi interposto contra decisão que indeferiu prova pericial.",
+        "sinonimos": ["Agravo"],
+        "relacionados": ["Recurso", "Decisão Interlocutória", "Processo Civil"]
+    },
+    {
+        "termo": "Desconsideração da Personalidade Jurídica",
+        "definicao": "Instrumento para ultrapassar autonomia patrimonial da pessoa jurídica.",
+        "fonte": "STJ - Superior Tribunal de Justiça",
+        "jurisprudencia": "REsp 1.111.222/SP - Aplicada para responsabilizar sócios.",
+        "area": "Direito Empresarial",
+        "exemplo": "A desconsideração foi aplicada para cobrar dívidas da empresa diretamente dos sócios.",
+        "sinonimos": ["Desconsideração"],
+        "relacionados": ["Pessoa Jurídica", "Sócios", "Responsabilidade"]
+    },
+    {
+        "termo": "Coisa Julgada",
+        "definicao": "Qualidade da sentença que não mais admite recurso, tornando-se imutável.",
+        "fonte": "STJ - Superior Tribunal de Justiça",
+        "jurisprudencia": "Disciplinada no art. 502 do CPC",
+        "area": "Direito Processual Civil",
+        "exemplo": "A sentença transitou em julgado após esgotados todos os recursos.",
+        "sinonimos": ["Res Judicata"],
+        "relacionados": ["Sentença", "Recurso", "Processo", "Jurisdição"]
+    },
+    {
+        "termo": "Jus Postulandi",
+        "definicao": "Capacidade de postular em juízo perante o Poder Judiciário.",
+        "fonte": "STJ - Superior Tribunal de Justiça",
+        "jurisprudencia": "Em regra, exercido por advogados (art. 1º da Lei 8.906/94)",
+        "area": "Direito Processual",
+        "exemplo": "A defensoria pública exerce o jus postulandi em favor dos necessitados.",
+        "sinonimos": ["Capacidade Postulatória"],
+        "relacionados": ["Legitimidade", "Capacidade Processual", "Advocacia"]
+    },
+    {
+        "termo": "Recurso Especial",
+        "definicao": "Recurso cabível quando a decisão contraria lei federal.",
+        "fonte": "STJ - Superior Tribunal de Justiça",
+        "jurisprudencia": "REsp 2.000.000/SP - Julgado por violação a lei federal.",
+        "area": "Direito Processual Civil",
+        "exemplo": "O recurso especial foi interposto por violação a lei federal.",
+        "sinonimos": ["REsp"],
+        "relacionados": ["STJ", "Lei Federal"]
+    },
+    {
+        "termo": "Embargos de Declaração",
+        "definicao": "Recurso para corrigir omissão, contradição ou obscuridade na decisão.",
+        "fonte": "STJ - Superior Tribunal de Justiça",
+        "jurisprudencia": "EDcl no REsp 1.500.000 - Admitidos para esclarecer omissão.",
+        "area": "Direito Processual Civil",
+        "exemplo": "Foram opostos embargos de declaração para esclarecer ponto obscuro na sentença.",
+        "sinonimos": ["EDcl"],
+        "relacionados": ["Recurso", "Decisão", "Processo"]
     },
     {
         "termo": "Princípio da Isonomia",
@@ -154,44 +244,34 @@ GLOSSARIO_DADOS = [
         "relacionados": ["Interesses Coletivos", "Meio Ambiente", "MP"]
     },
     {
-        "termo": "Prescrição",
-        "definicao": "Perda do direito de ação pelo decurso do tempo.",
-        "fonte": "Base de Dados do Planalto",
-        "jurisprudencia": "Aplicada para extinguir punibilidade no direito penal.",
-        "area": "Direito Civil",
-        "exemplo": "O direito de ação prescreveu após decorrido o prazo legal sem exercício.",
-        "sinonimos": ["Decadência", "Perda do direito"],
-        "relacionados": ["Decadência", "Prazo", "Direito Civil", "Obrigações"]
-    },
-    {
-        "termo": "Sentença",
-        "definicao": "Decisão do juiz que põe fim à fase cognitiva do processo.",
-        "fonte": "Base de Dados do Planalto",
-        "jurisprudencia": "Pode ser terminativa ou definitiva conforme o CPC.",
-        "area": "Direito Processual Civil",
-        "exemplo": "O juiz proferiu sentença condenatória após análise das provas.",
-        "sinonimos": ["Decisão", "Julgamento"],
-        "relacionados": ["Processo", "Recurso", "Acórdão"]
-    },
-    {
-        "termo": "Recurso Extraordinário",
-        "definicao": "Recurso cabível quando a decisão contraria a Constituição Federal.",
-        "fonte": "STF - Supremo Tribunal Federal",
-        "jurisprudencia": "RE 1.234.567 - Julgado procedente por ofensa à Constituição.",
+        "termo": "Mandado de Injunção",
+        "definicao": "Remédio constitucional para viabilizar exercício de direito não regulamentado.",
+        "fonte": "Câmara dos Deputados",
+        "jurisprudencia": "Previsto no art. 5º, LXXI da CF/88",
         "area": "Direito Constitucional",
-        "exemplo": "O recurso extraordinário foi interposto para questionar decisão que violou a Constituição Federal.",
-        "sinonimos": ["RE"],
-        "relacionados": ["STF", "Constituição", "Controle de Constitucionalidade"]
+        "exemplo": "Concedido mandado de injunção para regulamentar direito previsto na Constituição.",
+        "sinonimos": ["MI"],
+        "relacionados": ["Remédio Constitucional", "Direitos"]
     },
     {
-        "termo": "Coisa Julgada",
-        "definicao": "Qualidade da sentença que não mais admite recurso, tornando-se imutável.",
-        "fonte": "STJ - Superior Tribunal de Justiça",
-        "jurisprudencia": "Disciplinada no art. 502 do CPC",
-        "area": "Direito Processual Civil",
-        "exemplo": "A sentença transitou em julgado após esgotados todos os recursos.",
-        "sinonimos": ["Res Judicata"],
-        "relacionados": ["Sentença", "Recurso", "Processo", "Jurisdição"]
+        "termo": "Habeas Data",
+        "definicao": "Remédio constitucional para assegurar conhecimento de informações pessoais.",
+        "fonte": "Câmara dos Deputados",
+        "jurisprudencia": "Previsto no art. 5º, LXXII da CF/88",
+        "area": "Direito Constitucional",
+        "exemplo": "Concedido habeas data para acesso a informações pessoais em banco de dados.",
+        "sinonimos": ["HD"],
+        "relacionados": ["Remédio Constitucional", "Informações"]
+    },
+    {
+        "termo": "Ação Popular",
+        "definicao": "Instrumento para anular ato lesivo ao patrimônio público.",
+        "fonte": "Câmara dos Deputados",
+        "jurisprudencia": "Lei 4.717/65 - Regulamenta a ação popular.",
+        "area": "Direito Administrativo",
+        "exemplo": "O cidadão ajuizou ação popular para anular ato da prefeitura.",
+        "sinonimos": ["AP"],
+        "relacionados": ["Controle", "Administração Pública"]
     },
     {
         "termo": "Liminar",
@@ -204,6 +284,156 @@ GLOSSARIO_DADOS = [
         "relacionados": ["Tutela de Urgência", "Processo"]
     },
     {
+        "termo": "Prescrição",
+        "definicao": "Perda do direito de ação pelo decurso do tempo.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Aplicada para extinguir punibilidade no direito penal.",
+        "area": "Direito Civil",
+        "exemplo": "O direito de ação prescreveu após decorrido o prazo legal sem exercício.",
+        "sinonimos": ["Decadência", "Perda do direito"],
+        "relacionados": ["Decadência", "Prazo", "Direito Civil", "Obrigações"]
+    },
+    {
+        "termo": "Fiança",
+        "definicao": "Garantia pessoal para assegurar cumprimento de obrigação.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Concedida como medida cautelar em processo penal.",
+        "area": "Direito Penal",
+        "exemplo": "O juiz concedeu fiança como garantia em processo penal.",
+        "sinonimos": ["Garantia"],
+        "relacionados": ["Processo Penal", "Liberdade"]
+    },
+    {
+        "termo": "Testemunha",
+        "definicao": "Pessoa que depõe sobre fatos relevantes para o processo.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Oitiva obrigatória em processos criminais.",
+        "area": "Direito Processual",
+        "exemplo": "A testemunha foi ouvida para esclarecer os fatos do processo.",
+        "sinonimos": ["Depoente"],
+        "relacionados": ["Prova", "Processo"]
+    },
+    {
+        "termo": "Sentença",
+        "definicao": "Decisão do juiz que põe fim à fase cognitiva do processo.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Pode ser terminativa ou definitiva conforme o CPC.",
+        "area": "Direito Processual Civil",
+        "exemplo": "O juiz proferiu sentença condenatória após análise das provas.",
+        "sinonimos": ["Decisão", "Julgamento"],
+        "relacionados": ["Processo", "Recurso", "Acórdão"]
+    },
+    {
+        "termo": "Acórdão",
+        "definicao": "Decisão proferida por tribunal colegiado.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Resultado do julgamento em segunda instância.",
+        "area": "Direito Processual",
+        "exemplo": "O acórdão do tribunal reformou a sentença de primeiro grau.",
+        "sinonimos": ["Decisão Colegiada"],
+        "relacionados": ["Tribunal", "Recurso"]
+    },
+    {
+        "termo": "Processo",
+        "definicao": "Conjunto de atos destinados à solução de conflito judicial.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Instrumento para realização da jurisdição.",
+        "area": "Direito Processual",
+        "exemplo": "O processo judicial tramitou por dois anos até a sentença final.",
+        "sinonimos": ["Procedimento"],
+        "relacionados": ["Jurisdição", "Ação"]
+    },
+    {
+        "termo": "Petição Inicial",
+        "definicao": "Primeira manifestação da parte que dá início ao processo.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Deve conter os requisitos do art. 319 do CPC.",
+        "area": "Direito Processual Civil",
+        "exemplo": "A petição inicial foi julgada improcedente por falta de provas.",
+        "sinonimos": ["Inicial"],
+        "relacionados": ["Processo", "Ação"]
+    },
+    {
+        "termo": "Contestação",
+        "definicao": "Resposta do réu aos pedidos da petição inicial.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Prazo de 15 dias para apresentação conforme CPC.",
+        "area": "Direito Processual Civil",
+        "exemplo": "O réu apresentou contestação negando os fatos alegados.",
+        "sinonimos": ["Resposta"],
+        "relacionados": ["Processo", "Réu"]
+    },
+    {
+        "termo": "Prova",
+        "definicao": "Meio para demonstrar a verdade dos fatos alegados.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Podem ser documentais, testemunhais, periciais, etc.",
+        "area": "Direito Processual",
+        "exemplo": "As provas documentais foram decisivas para a condenação.",
+        "sinonimos": ["Evidência"],
+        "relacionados": ["Processo", "Verdade"]
+    },
+    {
+        "termo": "Perícia",
+        "definicao": "Prova técnica realizada por profissional habilitado.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Necessária para questões que exigem conhecimento especializado.",
+        "area": "Direito Processual",
+        "exemplo": "A perícia técnica constatou vício na construção.",
+        "sinonimos": ["Laudo"],
+        "relacionados": ["Prova", "Técnica"]
+    },
+    {
+        "termo": "Arrolamento",
+        "definicao": "Inventário judicial de bens do devedor.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Utilizado em processos de execução.",
+        "area": "Direito Processual Civil",
+        "exemplo": "Foi determinado o arrolamento de bens do devedor.",
+        "sinonimos": ["Inventário"],
+        "relacionados": ["Execução", "Bens"]
+    },
+    {
+        "termo": "Arresto",
+        "definicao": "Medida cautelar de apreensão de bens.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Aplicada para garantir futura execução.",
+        "area": "Direito Processual Civil",
+        "exemplo": "O arresto dos bens foi determinado como medida cautelar.",
+        "sinonimos": ["Apreensão"],
+        "relacionados": ["Cautelar", "Bens"]
+    },
+    {
+        "termo": "Sequestro",
+        "definicao": "Medida cautelar de deposição judicial de bens.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Utilizado para conservação de bens litigiosos.",
+        "area": "Direito Processual Civil",
+        "exemplo": "O sequestro dos bens foi determinado pelo juiz.",
+        "sinonimos": ["Depósito"],
+        "relacionados": ["Cautelar", "Bens"]
+    },
+    {
+        "termo": "Busca e Apreensão",
+        "definicao": "Medida judicial para localizar e apreender bens ou pessoas.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Regulamentada no Código de Processo Civil.",
+        "area": "Direito Processual",
+        "exemplo": "Foi determinada busca e apreensão de documentos.",
+        "sinonimos": ["Busca"],
+        "relacionados": ["Medida", "Prova"]
+    },
+    {
+        "termo": "Interceptação Telefônica",
+        "definicao": "Meio de prova para captação de comunicações.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Disciplinada pela Lei 9.296/96.",
+        "area": "Direito Processual Penal",
+        "exemplo": "A interceptação telefônica foi autorizada pelo juiz.",
+        "sinonimos": ["Escuta"],
+        "relacionados": ["Prova", "Investigação"]
+    },
+    {
         "termo": "Prisão Preventiva",
         "definicao": "Medida cautelar de privação de liberdade durante o processo.",
         "fonte": "Base de Dados do Planalto",
@@ -214,28 +444,58 @@ GLOSSARIO_DADOS = [
         "relacionados": ["Prisão", "Processo Penal", "Liberdade"]
     },
     {
-        "termo": "Desconsideração da Personalidade Jurídica",
-        "definicao": "Instrumento para ultrapassar autonomia patrimonial da pessoa jurídica.",
-        "fonte": "STJ - Superior Tribunal de Justiça",
-        "jurisprudencia": "REsp 1.111.222/SP - Aplicada para responsabilizar sócios.",
-        "area": "Direito Empresarial",
-        "exemplo": "A desconsideração foi aplicada para cobrar dívidas da empresa diretamente dos sócios.",
-        "sinonimos": ["Desconsideração"],
-        "relacionados": ["Pessoa Jurídica", "Sócios", "Responsabilidade"]
+        "termo": "Prisão Temporária",
+        "definicao": "Prisão cautelar por prazo determinado para investigação.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Disciplinada pela Lei 7.960/89.",
+        "area": "Direito Processual Penal",
+        "exemplo": "Foi decretada prisão temporária para investigações.",
+        "sinonimos": ["Prisão Investigatória"],
+        "relacionados": ["Prisão", "Investigação"]
     },
     {
-        "termo": "Embargos de Declaração",
-        "definicao": "Recurso para corrigir omissão, contradição ou obscuridade na decisão.",
-        "fonte": "STJ - Superior Tribunal de Justiça",
-        "jurisprudencia": "EDcl no REsp 1.500.000 - Admitidos para esclarecer omissão.",
-        "area": "Direito Processual Civil",
-        "exemplo": "Foram opostos embargos de declaração para esclarecer ponto obscuro na sentença.",
-        "sinonimos": ["EDcl"],
-        "relacionados": ["Recurso", "Decisão", "Processo"]
+        "termo": "Liberdade Provisória",
+        "definicao": "Concessão de liberdade durante o processo com ou sem fiança.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Regulamentada nos arts. 319 e 321 do CPP.",
+        "area": "Direito Processual Penal",
+        "exemplo": "O réu obteve liberdade provisória com fiança.",
+        "sinonimos": ["Liberdade Cautelar"],
+        "relacionados": ["Liberdade", "Fiança"]
+    },
+    {
+        "termo": "Sursis",
+        "definicao": "Suspensão condicional da pena.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Previsto no art. 77 do Código Penal.",
+        "area": "Direito Penal",
+        "exemplo": "O juiz concedeu sursis ao réu primário.",
+        "sinonimos": ["Suspensão"],
+        "relacionados": ["Pena", "Condicional"]
+    },
+    {
+        "termo": "Transação Penal",
+        "definicao": "Acordo no processo penal para aplicação de pena alternativa.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Disciplinada pela Lei 9.099/95.",
+        "area": "Direito Processual Penal",
+        "exemplo": "Foi celebrada transação penal com aplicação de pena alternativa.",
+        "sinonimos": ["Acordo"],
+        "relacionados": ["Pena", "Alternativa"]
+    },
+    {
+        "termo": "Suspensão Condicional do Processo",
+        "definicao": "Paralisação temporária do processo penal sob condições.",
+        "fonte": "Base de Dados do Planalto",
+        "jurisprudencia": "Prevista na Lei 9.099/95 para crimes de menor potencial.",
+        "area": "Direito Processual Penal",
+        "exemplo": "O processo foi suspenso condicionalmente.",
+        "sinonimos": ["Suspensão"],
+        "relacionados": ["Processo", "Condicional"]
     }
 ]
 
-# Notícias para TODOS os termos
+# Notícias para TODOS os 41 TERMOS
 NOTICIAS_BASE = {
     "Habeas Corpus": [
         {
@@ -255,6 +515,33 @@ NOTICIAS_BASE = {
             "url": "#"
         }
     ],
+    "Recurso Extraordinário": [
+        {
+            "titulo": "STF analisa recurso extraordinário sobre liberdade de expressão",
+            "fonte": "Supremo Tribunal Federal",
+            "data": "2024-01-18",
+            "resumo": "Caso discute limites constitucionais da liberdade de imprensa.",
+            "url": "#"
+        }
+    ],
+    "Arguição de Descumprimento de Preceito Fundamental": [
+        {
+            "titulo": "ADPF questiona lei estadual sobre educação",
+            "fonte": "ConJur",
+            "data": "2024-01-13",
+            "resumo": "Ação contesta constitucionalidade de norma estadual na área educacional.",
+            "url": "#"
+        }
+    ],
+    "Súmula Vinculante": [
+        {
+            "titulo": "STF edita nova súmula vinculante sobre processo administrativo",
+            "fonte": "Supremo Tribunal Federal",
+            "data": "2024-01-17",
+            "resumo": "Nova súmula estabelece entendimento sobre prazos processuais.",
+            "url": "#"
+        }
+    ],
     "Ação Rescisória": [
         {
             "titulo": "STJ admite ação rescisória por documento novo descoberto",
@@ -270,6 +557,60 @@ NOTICIAS_BASE = {
             "fonte": "Tribunal de Justiça SP",
             "data": "2024-01-05",
             "resumo": "Decisão inédita reconhece direito de propriedade por usucapião familiar urbana.",
+            "url": "#"
+        }
+    ],
+    "Agravo de Instrumento": [
+        {
+            "titulo": "STJ uniformiza entendimento sobre agravo de instrumento",
+            "fonte": "STJ Notícias",
+            "data": "2024-01-03",
+            "resumo": "Novo entendimento facilita recurso contra decisões interlocutórias.",
+            "url": "#"
+        }
+    ],
+    "Desconsideração da Personalidade Jurídica": [
+        {
+            "titulo": "Empresários respondem por dívidas após desconsideração da personalidade jurídica",
+            "fonte": "Jornal do Comércio",
+            "data": "2024-01-07",
+            "resumo": "Tribunal aplica teoria para responsabilizar sócios por obrigações da empresa.",
+            "url": "#"
+        }
+    ],
+    "Coisa Julgada": [
+        {
+            "titulo": "STF discute limites da coisa julgada em ações coletivas",
+            "fonte": "Supremo Tribunal Federal",
+            "data": "2024-01-14",
+            "resumo": "Julgamento define alcance da coisa julgada em demandas de grande impacto.",
+            "url": "#"
+        }
+    ],
+    "Jus Postulandi": [
+        {
+            "titulo": "Defensoria Pública amplia exercício do jus postulandi",
+            "fonte": "Defensoria Pública",
+            "data": "2024-01-09",
+            "resumo": "Novo programa permite atuação em causas de maior complexidade.",
+            "url": "#"
+        }
+    ],
+    "Recurso Especial": [
+        {
+            "titulo": "STJ recebe recorde de recursos especiais em 2024",
+            "fonte": "STJ Notícias",
+            "data": "2024-01-16",
+            "resumo": "Corte registra aumento de 15% na entrada de recursos especiais.",
+            "url": "#"
+        }
+    ],
+    "Embargos de Declaração": [
+        {
+            "titulo": "Novo entendimento sobre embargos de declaração no TJRJ",
+            "fonte": "Tribunal de Justiça RJ",
+            "data": "2024-01-11",
+            "resumo": "Decisão estabelece parâmetros para embargos declaratórios.",
             "url": "#"
         }
     ],
@@ -300,39 +641,30 @@ NOTICIAS_BASE = {
             "url": "#"
         }
     ],
-    "Prescrição": [
+    "Mandado de Injunção": [
         {
-            "titulo": "STJ uniformiza entendimento sobre prescrição intercorrente",
-            "fonte": "STJ Notícias",
-            "data": "2024-01-26",
-            "resumo": "Nova orientação sobre contagem de prazos prescricionais.",
-            "url": "#"
-        }
-    ],
-    "Sentença": [
-        {
-            "titulo": "TJMG anula sentença por vício na fundamentação",
-            "fonte": "Tribunal de Justiça MG",
-            "data": "2024-01-29",
-            "resumo": "Decisão destaca importância da motivação adequada das sentenças.",
-            "url": "#"
-        }
-    ],
-    "Recurso Extraordinário": [
-        {
-            "titulo": "STF analisa recurso extraordinário sobre liberdade de expressão",
+            "titulo": "STF concede mandado de injunção para regulamentar direito",
             "fonte": "Supremo Tribunal Federal",
-            "data": "2024-01-18",
-            "resumo": "Caso discute limites constitucionais da liberdade de imprensa.",
+            "data": "2024-01-22",
+            "resumo": "Decisão garante exercício de direito não regulamentado pelo legislador.",
             "url": "#"
         }
     ],
-    "Coisa Julgada": [
+    "Habeas Data": [
         {
-            "titulo": "STF discute limites da coisa julgada em ações coletivas",
-            "fonte": "Supremo Tribunal Federal",
-            "data": "2024-01-14",
-            "resumo": "Julgamento define alcance da coisa julgada em demandas de grande impacto.",
+            "titulo": "TJSP concede habeas data para acesso a informações pessoais",
+            "fonte": "Tribunal de Justiça SP",
+            "data": "2024-01-23",
+            "resumo": "Decisão obriga órgão público a fornecer dados cadastrais.",
+            "url": "#"
+        }
+    ],
+    "Ação Popular": [
+        {
+            "titulo": "Cidadão ajuíza ação popular contra ato da prefeitura",
+            "fonte": "Jornal do Comércio",
+            "data": "2024-01-24",
+            "resumo": "Ação questiona legalidade de contrato administrativo.",
             "url": "#"
         }
     ],
@@ -345,6 +677,141 @@ NOTICIAS_BASE = {
             "url": "#"
         }
     ],
+    "Prescrição": [
+        {
+            "titulo": "STJ uniformiza entendimento sobre prescrição intercorrente",
+            "fonte": "STJ Notícias",
+            "data": "2024-01-26",
+            "resumo": "Nova orientação sobre contagem de prazos prescricionais.",
+            "url": "#"
+        }
+    ],
+    "Fiança": [
+        {
+            "titulo": "TJRS define novos critérios para concessão de fiança",
+            "fonte": "Tribunal de Justiça RS",
+            "data": "2024-01-27",
+            "resumo": "Decisão estabelece parâmetros para cálculo do valor da fiança.",
+            "url": "#"
+        }
+    ],
+    "Testemunha": [
+        {
+            "titulo": "STF admite testemunha por videoconferência em julgamento",
+            "fonte": "Supremo Tribunal Federal",
+            "data": "2024-01-28",
+            "resumo": "Inovação processual garante celeridade e segurança.",
+            "url": "#"
+        }
+    ],
+    "Sentença": [
+        {
+            "titulo": "TJMG anula sentença por vício na fundamentação",
+            "fonte": "Tribunal de Justiça MG",
+            "data": "2024-01-29",
+            "resumo": "Decisão destaca importância da motivação adequada das sentenças.",
+            "url": "#"
+        }
+    ],
+    "Acórdão": [
+        {
+            "titulo": "STJ publica acórdão histórico sobre direito digital",
+            "fonte": "STJ Notícias",
+            "data": "2024-01-30",
+            "resumo": "Decisão pioneira estabelece parâmetros para crimes cibernéticos.",
+            "url": "#"
+        }
+    ],
+    "Processo": [
+        {
+            "titulo": "CNJ lança programa para digitalização de processos",
+            "fonte": "Conselho Nacional de Justiça",
+            "data": "2024-01-31",
+            "resumo": "Iniciativa visa agilizar tramitação processual em todo país.",
+            "url": "#"
+        }
+    ],
+    "Petição Inicial": [
+        {
+            "titulo": "OAB discute requisitos da petição inicial em seminário",
+            "fonte": "OAB Nacional",
+            "data": "2024-02-01",
+            "resumo": "Especialistas debatem formalidades e conteúdo da peça inaugural.",
+            "url": "#"
+        }
+    ],
+    "Contestação": [
+        {
+            "titulo": "STJ define prazo para contestação em processo eletrônico",
+            "fonte": "STJ Notícias",
+            "data": "2024-02-02",
+            "resumo": "Novo entendimento sobre contagem de prazos no PJe.",
+            "url": "#"
+        }
+    ],
+    "Prova": [
+        {
+            "titulo": "TJSP admite nova modalidade de prova digital",
+            "fonte": "Tribunal de Justiça SP",
+            "data": "2024-02-03",
+            "resumo": "Decisão inovadora aceita prova coletada por meio digital.",
+            "url": "#"
+        }
+    ],
+    "Perícia": [
+        {
+            "titulo": "Perícia técnica é essencial em caso de dano ambiental",
+            "fonte": "Jornal do Meio Ambiente",
+            "data": "2024-02-04",
+            "resumo": "Laudo pericial determinou extensão dos danos ambientais.",
+            "url": "#"
+        }
+    ],
+    "Arrolamento": [
+        {
+            "titulo": "TJRS simplifica procedimento de arrolamento de bens",
+            "fonte": "Tribunal de Justiça RS",
+            "data": "2024-02-05",
+            "resumo": "Nova sistemática agiliza inventário de bens do devedor.",
+            "url": "#"
+        }
+    ],
+    "Arresto": [
+        {
+            "titulo": "Decisão concede arresto de bens em ação de execução",
+            "fonte": "Jornal do Comércio",
+            "data": "2024-02-06",
+            "resumo": "Medida cautelar garante futura execução de crédito.",
+            "url": "#"
+        }
+    ],
+    "Sequestro": [
+        {
+            "titulo": "STJ define requisitos para sequestro de bens",
+            "fonte": "STJ Notícias",
+            "data": "2024-02-07",
+            "resumo": "Novo entendimento sobre medida cautelar de sequestro.",
+            "url": "#"
+        }
+    ],
+    "Busca e Apreensão": [
+        {
+            "titulo": "Operação realiza busca e apreensão em investigação",
+            "fonte": "Polícia Federal",
+            "data": "2024-02-08",
+            "resumo": "Mandado judicial autoriza apreensão de documentos.",
+            "url": "#"
+        }
+    ],
+    "Interceptação Telefônica": [
+        {
+            "titulo": "STF define limites para interceptação telefônica",
+            "fonte": "Supremo Tribunal Federal",
+            "data": "2024-02-09",
+            "resumo": "Decisão estabelece parâmetros constitucionais para escutas.",
+            "url": "#"
+        }
+    ],
     "Prisão Preventiva": [
         {
             "titulo": "STJ revisa critérios para prisão preventiva",
@@ -354,21 +821,48 @@ NOTICIAS_BASE = {
             "url": "#"
         }
     ],
-    "Desconsideração da Personalidade Jurídica": [
+    "Prisão Temporária": [
         {
-            "titulo": "Empresários respondem por dívidas após desconsideração da personalidade jurídica",
-            "fonte": "Jornal do Comércio",
-            "data": "2024-01-07",
-            "resumo": "Tribunal aplica teoria para responsabilizar sócios por obrigações da empresa.",
+            "titulo": "Operação utiliza prisão temporária em investigação",
+            "fonte": "Polícia Civil",
+            "data": "2024-02-11",
+            "resumo": "Medida permite aprofundar investigações criminais.",
             "url": "#"
         }
     ],
-    "Embargos de Declaração": [
+    "Liberdade Provisória": [
         {
-            "titulo": "Novo entendimento sobre embargos de declaração no TJRJ",
-            "fonte": "Tribunal de Justiça RJ",
-            "data": "2024-01-11",
-            "resumo": "Decisão estabelece parâmetros para embargos declaratórios.",
+            "titulo": "TJSP concede liberdade provisória com medidas cautelares",
+            "fonte": "Tribunal de Justiça SP",
+            "data": "2024-02-12",
+            "resumo": "Decisão aplica medidas alternativas à prisão.",
+            "url": "#"
+        }
+    ],
+    "Sursis": [
+        {
+            "titulo": "Juiz concede sursis em caso de primeiro delito",
+            "fonte": "Jornal do Direito",
+            "data": "2024-02-13",
+            "resumo": "Suspensão condicional da pena beneficia réu primário.",
+            "url": "#"
+        }
+    ],
+    "Transação Penal": [
+        {
+            "titulo": "MP promove transação penal em caso de menor potencial",
+            "fonte": "Ministério Público",
+            "data": "2024-02-14",
+            "resumo": "Acordo evita processo judicial e aplica pena alternativa.",
+            "url": "#"
+        }
+    ],
+    "Suspensão Condicional do Processo": [
+        {
+            "titulo": "Justiça suspende processo condicionalmente",
+            "fonte": "Tribunal de Justiça",
+            "data": "2024-02-15",
+            "resumo": "Decisão aplica instituto da suspensão condicional do processo.",
             "url": "#"
         }
     ]
@@ -688,7 +1182,7 @@ def exibir_pagina_sobre():
     - Base de dados do Planalto
     
     **📊 Estatísticas:**
-    - 15+ termos jurídicos essenciais
+    - 41 termos jurídicos essenciais
     - 8 áreas do direito contempladas
     - 4 fontes oficiais consultadas
     - Interface moderna e responsiva
